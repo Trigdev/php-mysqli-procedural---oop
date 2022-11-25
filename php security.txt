@@ -1,0 +1,64 @@
+form validation
+
+<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = test_input($_POST["name"]);
+    $email = test_input($_POST["email"]);
+    $website = test_input($_POST["website"]);
+    $commit = test_input($_POST["comment"]);
+    $gender = test_input($_POST["gender"]);
+}
+
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = mysqli_real_escape_string($data);
+    $data = htmlspecialchars($data);
+    return $data
+}
+
+function validateName($inputName) {
+    if (!preg_match("/^[a-zA-Z ]*$/", $inputName)) {
+        $_SESSION['error'] = "Only letters and white space allowed";
+        header("location: ");
+    }
+}
+
+function validateEmail($inputName) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Invalid email format";
+        header("location: ");
+    }
+}
+
+function validateUrl($inputName) {
+    if (! preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $inputName)) {
+        $_SESSION['error'] = "Invalid URL";
+        header("location: ");
+    }
+}
+
+
+REMEMBER ME
+
+function rememberMe($inputRem, $inputName, $inputPass) {
+	if(! empty($inputRem)) {
+		setcookie("user_name", $inputName, time() + (10 * 365 * 24 * 60 * 60));
+		setcookie("user_password", $inputPass, time() + (10 * 365 * 24 * 60 * 60));
+
+	} else {
+		if(isset($_COOKIE["user_name"])) {
+			setcookie("user_name", "");
+		}
+		if(isset($_COOKIE["user_password"])) {
+			setcookie("user_password", "");
+		}
+	}
+}
+
+value="<?php if(isset($_COOKIE["user_name"])) { echo $_COOKIE["user_name"]; } ?>"
+
+value="<?php if(isset($_COOKIE["user_password])) { echo $_COOKIE["user_password"]; } ?>"
+
+<?php if(isset($_COOKIE["user_name"])) { ?> checked <?php } ?>
